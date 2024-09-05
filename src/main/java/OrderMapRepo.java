@@ -18,12 +18,20 @@ public class OrderMapRepo implements OrderRepo{
 
     @Override
     public Order addOrder(Order newOrder) {
-        orders.put(newOrder.id(), newOrder);
-        return newOrder;
+        orders.put(newOrder.id(), new Order(newOrder.id(), newOrder.products(), OrderStatus.PROCESSING));
+        return orders.get(newOrder.id());
     }
 
     @Override
     public void removeOrder(String id) {
         orders.remove(id);
+    }
+
+    @Override
+    public void updateOrderStatus(String id, OrderStatus status) {
+        Order order = orders.get(id);
+        if (order != null) {
+            orders.put(id, new Order(order.id(), order.products(), status));
+        }
     }
 }
