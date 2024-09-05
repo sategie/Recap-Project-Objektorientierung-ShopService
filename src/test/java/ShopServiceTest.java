@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,17 +13,27 @@ class ShopServiceTest {
         //GIVEN
         ShopService shopService = new ShopService();
         List<String> productsIds = List.of("1");
+        Instant beforeCreation = Instant.now();
 
 
         //WHEN
         Order actual = shopService.addOrder(productsIds);
+        Instant afterCreation = Instant.now();
 
 
         //THEN
-        Order expected = new Order(actual.id(), List.of(new Product("1", "Apfel")), OrderStatus.PROCESSING);
+        Order expected = new Order(
+                actual.id(),
+                List.of(new Product("1", "Apfel")),
+                OrderStatus.PROCESSING,
+                actual.timestamp()
+        );
+
         assertEquals(expected.products(), actual.products());
         assertEquals(expected.status(), actual.status());
         assertNotNull(actual.id());
+        assertTrue(actual.timestamp().isAfter(beforeCreation) || actual.timestamp().equals(beforeCreation));
+        assertTrue(actual.timestamp().isBefore(afterCreation) || actual.timestamp().equals(afterCreation));
 
     }
 

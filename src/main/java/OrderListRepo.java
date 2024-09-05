@@ -38,7 +38,8 @@ public class OrderListRepo implements OrderRepo {
         for (int i = 0; i < orders.size(); i++) {
             Order order = orders.get(i);
             if (order.id().equals(id)) {
-                orders.set(i, new Order(order.id(), order.products(), status));
+//                orders.set(i, new Order(order.id(), order.products(), status));
+                orders.set(i, order.withStatus(status));
                 return;
             }
         }
