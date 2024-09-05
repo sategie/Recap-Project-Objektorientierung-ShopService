@@ -18,24 +18,24 @@ class ShopServiceTest {
 
 
         //THEN
-        Order expected = new Order("-1", List.of(new Product("1", "Apfel")), OrderStatus.PROCESSING);
+        Order expected = new Order(actual.id(), List.of(new Product("1", "Apfel")), OrderStatus.PROCESSING);
         assertEquals(expected.products(), actual.products());
-        assertNotNull(expected.id());
+        assertEquals(expected.status(), actual.status());
+        assertNotNull(actual.id());
 
     }
 
     @Test
-    void addOrderTest_whenInvalidProductId_expectNull() {
+    void addOrderTest_whenInvalidProductId_expectException() {
         //GIVEN
         ShopService shopService = new ShopService();
         List<String> productsIds = List.of("1", "2");
 
-        //WHEN
-        Order actual = shopService.addOrder(productsIds);
-
-        //THEN
-        assertNull(actual);
-
+        //WHEN & THEN
+        ProductNotFoundException exception = assertThrows(ProductNotFoundException.class, () -> {
+            shopService.addOrder(productsIds);
+        });
+        assertEquals("Product with id 2 not found", exception.getMessage());
     }
 
     //    Add getOrdersByStatusTest
