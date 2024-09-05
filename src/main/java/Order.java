@@ -1,9 +1,14 @@
+import lombok.With;
+
+import java.time.Instant;
 import java.util.List;
 
 public record Order(
         String id,
         List<Product> products,
-        OrderStatus status) {
+        @With OrderStatus status,
+        @With Instant timestamp
+        ) {
 }
 
 // Add enum to Order record

@@ -1,3 +1,4 @@
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,13 @@ public class ShopService {
             products.add(productToOrderOpt.get());
         }
 
-        Order newOrder = new Order(UUID.randomUUID().toString(), products, OrderStatus.PROCESSING);
+        Order newOrder = new Order(
+                UUID.randomUUID().toString(),
+                products,
+                OrderStatus.PROCESSING,
+//                Set the current timestamp
+                Instant.now()
+        );
 
         return orderRepo.addOrder(newOrder);
     }
@@ -34,6 +41,17 @@ public class ShopService {
 
     public void updateOrderStatus(String orderId, OrderStatus status) {
         orderRepo.updateOrderStatus(orderId, status);
+    }
+
+    // New Method to update the Order
+    public Optional<Order> updateOrder(String orderId, OrderStatus newStatus) {
+        Order order = orderRepo.getOrderById(orderId);
+        if (order != null) {
+            Order updatedOrder = order.withStatus(newStatus);
+            orderRepo.updateOrderStatus(orderId, newStatus);
+            return Optional.of(updatedOrder);
+        }
+        return Optional.empty();
     }
 
 }
