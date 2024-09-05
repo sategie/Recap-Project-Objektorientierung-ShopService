@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,5 +53,30 @@ class ShopServiceTest {
         //THEN
         assertEquals(1, inDeliveryOrders.size());
         assertEquals(OrderStatus.IN_DELIVERY, inDeliveryOrders.get(0).status());
+    }
+
+    @Test
+    void updateOrderTest() {
+        // GIVEN
+        ShopService shopService = new ShopService();
+        List<String> productsIds = List.of("1");
+        Order order = shopService.addOrder(productsIds);
+        // WHEN
+        Optional<Order> updatedOrderOpt = shopService.updateOrder(order.id(), OrderStatus.COMPLETED);
+        // THEN
+        assertTrue(updatedOrderOpt.isPresent());
+        Order updatedOrder = updatedOrderOpt.get();
+        assertEquals(OrderStatus.COMPLETED, updatedOrder.status());
+        assertEquals(order.id(), updatedOrder.id());
+        assertEquals(order.products(), updatedOrder.products());
+    }
+    @Test
+    void updateOrderTest_whenOrderNotFound() {
+        // GIVEN
+        ShopService shopService = new ShopService();
+        // WHEN
+        Optional<Order> updatedOrderOpt = shopService.updateOrder("non-existent-id", OrderStatus.COMPLETED);
+        // THEN
+        assertFalse(updatedOrderOpt.isPresent());
     }
 }

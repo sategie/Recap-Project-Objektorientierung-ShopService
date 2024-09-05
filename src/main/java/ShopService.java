@@ -36,4 +36,15 @@ public class ShopService {
         orderRepo.updateOrderStatus(orderId, status);
     }
 
+    // New Method to update the Order
+    public Optional<Order> updateOrder(String orderId, OrderStatus newStatus) {
+        Order order = orderRepo.getOrderById(orderId);
+        if (order != null) {
+            Order updatedOrder = order.withStatus(newStatus);
+            orderRepo.updateOrderStatus(orderId, newStatus);
+            return Optional.of(updatedOrder);
+        }
+        return Optional.empty();
+    }
+
 }
