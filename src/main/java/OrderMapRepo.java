@@ -18,8 +18,8 @@ public class OrderMapRepo implements OrderRepo{
 
     @Override
     public Order addOrder(Order newOrder) {
-        orders.put(newOrder.id(), newOrder);
-        return newOrder;
+        orders.put(newOrder.id(), new Order(newOrder.id(), newOrder.products(), OrderStatus.PROCESSING));
+        return orders.get(newOrder.id());
     }
 
     @Override
